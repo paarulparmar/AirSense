@@ -221,19 +221,43 @@ def fetch_live_city_air_quality(
 
     waqi_token = waqi_token or ""
     owm_api_key = owm_api_key or ""
-   try:
-    geo = geocode_city(city, owm_api_key if owm_api_key else None)
-except Exception:
-    geo = geocode_city(city, None)
+
+    # Try geocoding with OpenWeather, then fall back to built-in coordinates
+    try:
+        geo = geocode_city(city, owm_api_key)
+    except Exception:
+        geo = geocode_city(city, None)
+
     try:
         air = fetch_waqi_live(geo["city"], waqi_token)
-        weather = fetch_openweather_current(geo["lat"], geo["lon"], owm_api_key)
-        return {**geo, **air, **weather, "is_estimated": False}
+        weather = fetch_openweather_current(
+            geo["lat"],
+            geo["lon"],
+            owm_api_key,
+        )
+
+        return {
+            **geo,
+            **air,
+            **weather,
+            "is_estimated": False,
+        }
+
     except Exception:
         if not allow_fallback:
             raise
-        fallback = live_fallback(geo["city"], geo["lat"], geo["lon"])
-        return {**geo, **fallback, "is_estimated": True}
+
+        fallback = live_fallback(
+            geo["city"],
+            geo["lat"],
+            geo["lon"],
+        )
+
+        return {
+            **geo,
+            **fallback,
+            "is_estimated": True,
+        }
 
 
 def _city_historical_frame(city: str, start: datetime, periods: int) -> pd.DataFrame:
