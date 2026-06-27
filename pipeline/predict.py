@@ -50,14 +50,13 @@ def predict_lstm(window: np.ndarray) -> np.ndarray:
 
 
 def predict_risk_class(features: pd.DataFrame, current_aqi: float) -> int:
-    try:
-        if XGB_PATH.exists():
-            model = joblib.load(XGB_PATH)
-            pred = model.predict(features[FEATURE_COLUMNS].tail(1))[0]
-            return int(pred)
-    except Exception:
-        pass
-    return risk_class_from_aqi(current_aqi)
+    # Future version:
+    # if XGB_PATH.exists():
+    #     model = joblib.load(XGB_PATH)
+    #     pred = model.predict(features[FEATURE_COLUMNS].tail(1))[0]
+    #     return int(pred)
+
+    return risk_class_from_aqi(float(current_aqi))
 
 
 def health_recommendations(risk_id: int, row: dict[str, Any]) -> list[str]:
