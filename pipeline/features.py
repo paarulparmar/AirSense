@@ -8,17 +8,29 @@ import pandas as pd
 
 FEATURE_COLUMNS = ["pm25", "pm10", "no2", "o3", "temp", "humidity", "wind_speed", "hour_of_day", "month"]
 TARGET_COLUMN = "aqi"
-RISK_LABELS = ["Good", "Moderate", "Unhealthy", "Hazardous"]
+RISK_LABELS = [
+    "Good",
+    "Moderate",
+    "Unhealthy for Sensitive Groups",
+    "Unhealthy",
+    "Very Unhealthy",
+    "Hazardous",
+]
 
 
 def risk_class_from_aqi(aqi: float) -> int:
     if aqi <= 50:
         return 0
-    if aqi <= 100:
+    elif aqi <= 100:
         return 1
-    if aqi <= 200:
+    elif aqi <= 150:
         return 2
-    return 3
+    elif aqi <= 200:
+        return 3
+    elif aqi <= 300:
+        return 4
+    else:
+        return 5
 
 
 def risk_label(class_id: int) -> str:
