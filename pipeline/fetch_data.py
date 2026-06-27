@@ -221,7 +221,10 @@ def fetch_live_city_air_quality(
 
     waqi_token = waqi_token or ""
     owm_api_key = owm_api_key or ""
+   try:
     geo = geocode_city(city, owm_api_key if owm_api_key else None)
+except Exception:
+    geo = geocode_city(city, None)
     try:
         air = fetch_waqi_live(geo["city"], waqi_token)
         weather = fetch_openweather_current(geo["lat"], geo["lon"], owm_api_key)
