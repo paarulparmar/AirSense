@@ -46,7 +46,12 @@ def gauge(aqi: float) -> go.Figure:
             value=aqi,
             number={"font": {"size": 44}},
             gauge={
-                "axis": {"range": [0, 300]},
+                "axis": {
+                    "range": [0, 300],
+                    "tickmode": "array",
+                    "tickvals": [0, 50, 100, 150, 200, 250, 300],
+                    "ticktext": ["0", "50", "100", "150", "200", "250", "300"],
+                },
                 "bar": {"color": "#111827"},
                 "steps": [
                     {"range": [0, 50], "color": "#b7e4c7"},
@@ -54,12 +59,20 @@ def gauge(aqi: float) -> go.Figure:
                     {"range": [100, 200], "color": "#fdba74"},
                     {"range": [200, 300], "color": "#fecaca"},
                 ],
-                "threshold": {"line": {"color": "#111827", "width": 4}, "value": min(aqi, 300)},
+                "threshold": {
+                    "line": {"color": "#111827", "width": 4},
+                    "value": min(aqi, 300),
+                },
             },
             title={"text": "Current AQI"},
         )
     )
-    fig.update_layout(height=300, margin=dict(l=20, r=20, t=50, b=10))
+
+    fig.update_layout(
+        height=320,
+        margin=dict(l=40, r=40, t=40, b=20),
+    )
+
     return fig
 
 
@@ -139,7 +152,7 @@ if run or city:
             if live.get("is_estimated"):
                 st.warning("Showing deterministic fallback estimates because one or more API calls were unavailable.")
         with top[2]:
-            st.metric("Temperature", f"{float(live['temp']):.1f} C")
+            st.metric("Temperature", f"{float(live['temp']):.1f} °C")
             st.metric("Humidity", f"{float(live['humidity']):.0f}%")
             st.metric("Wind", f"{float(live['wind_speed']):.1f} m/s")
 
@@ -150,9 +163,9 @@ if run or city:
         st.subheader("Pollutants")
         pcols = st.columns(4)
         with pcols[0]:
-            pollutant_card("PM2.5", float(live["pm25"]), "ug/m3", 35)
+            pollutant_card("PM2.5", float(live["pm25"]), "µg/m³", 35)
         with pcols[1]:
-            pollutant_card("PM10", float(live["pm10"]), "ug/m3", 150)
+            pollutant_card("PM10", float(live["pm10"]), "µg/m³", 150)
         with pcols[2]:
             pollutant_card("NO2", float(live["no2"]), "ppb", 100)
         with pcols[3]:
