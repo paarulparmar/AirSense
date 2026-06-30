@@ -50,4 +50,8 @@ WAQI and OpenWeatherMap free tiers are excellent for live app data. Their open f
 python -m pipeline.train_xgb --data data/historical_aqi.csv --model models/xgb_model.pkl
 python -m pipeline.train_lstm --data data/historical_aqi.csv --model models/lstm_model.h5 --scaler models/lstm_scaler.pkl --epochs 4
 ```
-
+## Model Evaluation
+----------------
+Forecast Horizon: 72 hours
+MAE: 18.13 AQI
+RMSE: 21.82 AQI
